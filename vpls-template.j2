@@ -1,0 +1,21 @@
+/configure service vpls {{SERVICE_ID}} customer {{CUSTOMER}} name {{NAME}} create
+service-mtu 9100
+allow-ip-int-bind
+exit
+bgp
+    route-distinguisher {{AS}}:{{SERVICE_ID}}
+    route-target export target:{{AS}}:{{SERVICE_ID}} import target:{{AS}}:{{SERVICE_ID}}
+    pw-template-binding 2 split-horizon-group "vpls-shg" import-rt "target:{{AS}}:{{SERVICE_ID}}"
+    exit
+exit
+bgp-ad
+    vpls-id {{AS}}:{{SERVICE_ID}}
+    vsi-id
+        prefix {{VSI_ID}}
+    exit
+    no shutdown
+exit
+stp
+    shutdown
+exit
+no shutdown

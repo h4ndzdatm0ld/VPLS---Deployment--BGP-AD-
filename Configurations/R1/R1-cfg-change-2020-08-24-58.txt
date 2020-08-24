@@ -1,0 +1,21 @@
+/configure service vpls 401 customer 100 name VPLS-TEST-1 create
+service-mtu 9100
+allow-ip-int-bind
+exit
+bgp
+    route-distinguisher 64500:401
+    route-target export target:64500:401 import target:64500:401
+    pw-template-binding 2 split-horizon-group "vpls-shg" import-rt "target:64500:401"
+    exit
+exit
+bgp-ad
+    vpls-id 64500:401
+    vsi-id
+        prefix 10.10.10.1
+    exit
+    no shutdown
+exit
+stp
+    shutdown
+exit
+no shutdown
